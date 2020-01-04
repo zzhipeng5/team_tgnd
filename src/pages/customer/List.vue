@@ -13,7 +13,7 @@
             <el-table-column label="操作">
                 <template v-slot="slot">
                     <!--阻止默认跳转-->
-                    <a href="" @click.prevent="toUpdataHandler(slot.row)">修改</a>
+                    <a href="" @click.prevent="toUpdateHandler(slot.row)">修改</a>
                     <a href="" @click.prevent="toDeleteHandler(slot.row.id)">删除</a>
                 </template>
             </el-table-column>
@@ -101,7 +101,7 @@ export default {
         closeModelHandler(){
             this.visible=false;
         },
-        toUpdataHandler(row){
+        toUpdateHandler(row){
             //模态框的表单中显示出当前行的信息
             this.form = row;
             this.visible = true;
