@@ -122,20 +122,27 @@ export default {
         toUpdataHander(row){
             this.title="修改员工信息";
             this.visible=true;
+            this.form=row;
         },
-        toDeletHander(id){
-            {
+        toDeleteHandler(id) {
             this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
-                this.$message({
+                //调用后台接口，完成删除操作
+                let url = "http://localhost:6677/waiter/deleteById?id="+id;
+                request.get(url).then((response)=>{
+                    //1.刷新数据
+                    this.loadData();
+                    //2.提示结果
+                    this.$message({
                     type: 'success',
                     message: '删除成功!'
-                });          
+                        });
+                })
+                     
             });
-        }
         },
         closeModelHandler(){
             this.visible=false;
