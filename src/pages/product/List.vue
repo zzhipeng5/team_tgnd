@@ -1,5 +1,5 @@
 <template>
-<!-- 顾客管理 -->
+<!-- 产品管理 -->
     <div>
         <!--按钮-->
         <el-button size="small" type="success" @click="toAddHandler">添加</el-button>
@@ -11,7 +11,7 @@
     <el-table-column fixed="left" prop="id" label="编号"></el-table-column>
     <el-table-column fixed="left" prop="name" label="产品名"></el-table-column>
     <el-table-column fixed="left" prop="price" label="价格"></el-table-column>
-    <el-table-column prop="status" label="产品状态"></el-table-column>
+    <el-table-column prop="categoryId" label="所属产品"></el-table-column>
     <el-table-column width="120" prop="description" label="产品说明"></el-table-column>
     <el-table-column width="200" prop="photo" label="产品照片">
         <template   slot-scope="scope">            
@@ -35,21 +35,24 @@
         <!--/分页-->
         <!--模态框-->
         <el-dialog
-            title="录入顾客信息"
+            title="录入产品信息"
             :visible.sync="visible"
             width="60%">
             <el-form :model="form" label-width="80px">
             <el-form-item label="产品名">
          <el-input type="name" v-model="form.name"/>
       </el-form-item>
-            <el-form-item label="产品状态">
-              <el-radio-group v-model="form.status">
-    <el-radio label="正常">正常</el-radio>
-    <el-radio label="不正常">不正常</el-radio>
-  </el-radio-group>
+             <el-form-item label="所属栏目">
+            <el-select v-model="form.categoryId">
+                <el-option 
+                    v-for="item in options" 
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"></el-option>
+            </el-select>
         </el-form-item>
             <el-form-item label="产品说明">
-          <el-input v-model="form.description"/>
+          <el-input type="textarea" v-model="form.description"/>
         </el-form-item>
             <el-form-item label="价格">
           <el-input v-model="form.price"/>
@@ -75,6 +78,13 @@ import querystring from 'querystring'
 export default {
     //用于存放要向网页中存放的方法
     methods:{
+        loadCategry(){
+    let url = "http://localhost:6677/category/findAll"
+        request.get(url).then((response)=>{
+            //将查询结果设置到product中,this指向外部函数的this
+            this.options=response.data;
+    })
+        },
         loadData(){
     let url = "http://localhost:6677/product/findAll"
         request.get(url).then((response)=>{
@@ -146,6 +156,7 @@ export default {
         return{
             visible:false,
             product:[],
+            options:[],
             form:{
                 type:"product"
             }
@@ -155,7 +166,8 @@ export default {
         //this为当前vue实例对象
         // vue实例创建完毕
         this.loadData();
-
+        //加载栏目信息
+        this.loadCategry();
     }
 }
 </script>
